@@ -1,147 +1,199 @@
+using System.Runtime.InteropServices;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public enum MusicalPhraseStatus { withoutPhrase, withinPhrase };
-public enum Beat { onBeat, offBeat }
 
 public class SoundController : MonoBehaviour
 {
-    public GameObject plusMessage;
+    public static AudioSource audioSource;
 
-    public static List<MusicInfo> Musics = new List<MusicInfo>();
+    public static UnityEvent musicIsPlaying;
+    public static UnityEvent musicIsNotPlaying;
+
+    public static List<MusicInfo> Musics;
     public TextAsset musicInfo;
 
-    public MusicalPhraseStatus musicalPhraseStatus;
-    public Beat beat;
-
-    public static bool rhythmAnalysis;
-    public static int melodyScore = 0;
-    public static int rhythmScore = 0;
-    public int rhythmScoreCombo = 0;
-    public static float rhythnScoreCryteria = 0.0f;
-    public static float beatTime = 0.0f;
-    public static float stepTime = 0.0f;
-    public bool stepXDone = false;
-    public bool stepYDone = false;
-
-    public float multiplier = 2.0f;
-
-    public static AudioSource audioSource;
-    public AudioClip[] audioClip = new AudioClip[23];
+    float multiplier = 2.0f;
+    
     public static int musicIndex = 0;
 
-    public float timeCount;
-
-    public static bool onBeat2;
-    public bool musicalPhrase;
-
     public GameObject bar;
+
     int barQuantitie = 10;
-    public float[] barHeights;
-    public float[] barHeightsBuffer;
+    float[] barHeights;
+    float[] barHeightsBuffer;
     public float yValue = 0.0f;
+
+    public GameObject plusMessage;
 
     public static float gradeTransparency = 0.05f;
 
-    public float melodyValue = 0.0f;
-    public float melodyValue01 = 0.0f;
-    public float melodyValueMax = 0.0f;
+    bool rhythmAnalysis;
+    public static int rhythmScore = 0;
+    int rhythmScoreCombo = 0;
+    float rhythnScoreCryteria = 0.0f;
+    float beatTime = 0.0f;
+    float stepTime = 0.0f;
+    public bool onBeat2;
+
+    public static int melodyScore = 0;
     public float dancerMelodyValue = 0.0f;
-
-    public List<float> MusicStatus;
-    public List<float> DancerStatus;
-
     public float melodyAnalisysDelay = 0.0f;
+    public static float melodyValue = 0;
+    public static float melodyValueMax = 0;
+
+    List<float> MusicStatus;
+    List<float> DancerStatus;
+
+
+    private void Awake()
+    {
+        musicIsPlaying = new UnityEvent();
+        musicIsNotPlaying = new UnityEvent();
+
+        audioSource = GetComponent<AudioSource>();
+        plusMessage = Resources.Load<GameObject>("Prefabs/Overlay/ScoreUpdate");
+        bar = Resources.Load<GameObject>("Prefabs/Bar");
+
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-
+        
+        Musics = new List<MusicInfo>();
         LoadMusicInfo();
+
+        InputSetup.anyStepOn.AddListener(ScoringRule);
+        InputSetup.playButton.AddListener(PlayMusic);
+        InputSetup.previousMusicButton.AddListener(PreviousMusic);
+        InputSetup.nextMusicButton.AddListener(NextMusic);
+
+        MusicStatus = new List<float>();
+        DancerStatus = new List<float>();
 
         barHeights = new float[barQuantitie];
         barHeightsBuffer = new float[barQuantitie];
 
-        musicalPhraseStatus = MusicalPhraseStatus.withoutPhrase;
-        beat = Beat.offBeat;
-
-
         //Catch and Define AudioSource
-        audioSource = GameObject.Find("AudioSource").GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
         audioSource.loop = false;
-        audioSource.volume = 0.75f;
-        audioSource.clip = audioClip[musicIndex];
+        audioSource.volume = 0.5f;
+
+        musicIndex = 0;
+        audioSource.clip = Musics[musicIndex].musicArchive;
 
         onBeat2 = false;
         rhythmAnalysis = false;
 
-        //Defines size of Texts on CANVAS
-        
     }
+
 
     // Update is called once per frame
     void Update()
     {
-        
-        //Change music
-        if (Input.GetButtonDown("LB") || Input.GetKeyDown(KeyCode.Comma)) {
-            audioSource.Stop();
-            SetVariablesToZero();
-            if (musicIndex <= 0)
-            {
-                musicIndex = audioClip.Length - 1;
-            }
-            else
-            {
-                musicIndex--;
-            }
-            audioSource.clip = audioClip[musicIndex];
-            audioSource.Play();
-            CreateAudioSpectrum(true);
-        } else if (Input.GetButtonDown("RB") || Input.GetKeyDown(KeyCode.Period)) {
-            audioSource.Stop();
-            SetVariablesToZero();
-            CreateAudioSpectrum(false);
-            if (musicIndex >= audioClip.Length - 1) {
-                musicIndex = 0;
-            }
-            else {
-                musicIndex++;
-            }
-            audioSource.clip = audioClip[musicIndex];
-            audioSource.Play();
-            CreateAudioSpectrum(true);
-        }
-
-        //Play and Stop Music
-        if (Input.GetKeyDown(KeyCode.P) || Input.GetButtonDown("START"))
-        {
-            if (audioSource.isPlaying) {
-                audioSource.Stop();
-                SetVariablesToZero();
-            }
-            else {
-                audioSource.Play();
-                CreateAudioSpectrum(true);
-            }
-        }
 
         //Updates while the music is playing
         if (audioSource.isPlaying)
         {
-            UpdateAudioSpectrumBars();
+            musicIsPlaying?.Invoke();
+            //UpdateAudioSpectrumBars();
             BeatVerificationByMusicInfo(musicIndex);
             MelodyVerification();
         }
         else {
+            musicIsNotPlaying?.Invoke();
             SetVariablesToZero();
         }
+
         UpdateGradeColor();
+
+    }
+
+    #region PLAYLIST_ACTIONS
+
+    //Method to start music
+    public void PlayMusic()
+    {
+
+        if (audioSource.isPlaying)
+        {
+            Debug.Log("PLAY Music");
+            audioSource.Stop();
+            musicIsNotPlaying?.Invoke();
+            SetVariablesToZero();
+            //CreateAudioSpectrum(false);
+        }
+        else
+        {
+            Debug.Log("STOP Music");
+            //CreateAudioSpectrum(true);
+            audioSource.Play();
+            musicIsPlaying?.Invoke();
+        }
+        Debug.Log("Play Music EVENT");
+    }
+
+    //Method to change music
+    public void NextMusic()
+    {
+
+        if (audioSource.isPlaying)
+        {
+            audioSource.Stop();
+            //CreateAudioSpectrum(false);
+            musicIsNotPlaying?.Invoke();
+            SetVariablesToZero();
+        }
+
+        if (musicIndex >= Musics.Count - 1)
+        {
+            musicIndex = 0;
+        }
+        else
+        {
+            musicIndex++;
+        }
+        audioSource.clip = Musics[musicIndex].musicArchive;
+        //CreateAudioSpectrum(true);
+        audioSource.Play();
+        musicIsPlaying?.Invoke();
+        Debug.Log("Next Music EVENT");
+    }
+
+    //Method to change music
+    public void PreviousMusic()
+    {
+
+        if (audioSource.isPlaying)
+        {
+            audioSource.Stop();
+            //CreateAudioSpectrum(false);
+            musicIsNotPlaying?.Invoke();
+            SetVariablesToZero();
+        }
+
+        if (musicIndex <= 0)
+        {
+            musicIndex = Musics.Count - 1;
+        }
+        else
+        {
+            musicIndex--;
+        }
+        audioSource.clip = Musics[musicIndex].musicArchive;
+        //CreateAudioSpectrum(true);
+        audioSource.Play();
+        musicIsPlaying?.Invoke();
+        Debug.Log("Previous Music EVENT");
     }
 
     //Method used to load information from CSV File in Resources folder
-    public void LoadMusicInfo() {
+    public void LoadMusicInfo()
+    {
 
         musicInfo = Resources.Load<TextAsset>("MusicInformation");
         string[] data = musicInfo.text.Split(new char[] { '\n' });
@@ -157,6 +209,9 @@ public class SoundController : MonoBehaviour
                 m.musicName = row[1];
                 m.artistName = row[2];
                 m.link = row[3];
+
+                string path = "Musics/" + row[1] + " by " + row[2];
+                m.musicArchive = Resources.Load<AudioClip>(path);
 
                 int.TryParse(row[4], out m.bpm1);
                 float.TryParse(row[5], out m.iniInterval1);
@@ -203,14 +258,14 @@ public class SoundController : MonoBehaviour
 
                 Musics.Add(m);
 
+                Debug.Log(m.musicArchive.name);
+
             }
         }
 
-        foreach (MusicInfo m in Musics)
-        {
-            Debug.Log(m.musicName + " by " + m.artistName + " has been added to Music List");
-        }
     }
+
+    #endregion
 
     //Change the color of that grade spawned at player position
     public void UpdateGradeColor() {
@@ -270,13 +325,13 @@ public class SoundController : MonoBehaviour
                 yValue = barHeights[i];
             }
 
-            GameObject.Find("SoundSystem").transform.GetChild(i).GetComponent<Transform>().localScale =
-                new Vector3(GameObject.Find("SoundSystem").transform.GetChild(i).GetComponent<Transform>().localScale.x,
+            transform.GetChild(i).GetComponent<Transform>().localScale =
+                new Vector3(transform.GetChild(i).GetComponent<Transform>().localScale.x,
                 multiplier * yValue,
-                GameObject.Find("SoundSystem").transform.GetChild(i).GetComponent<Transform>().localScale.z);
+                transform.GetChild(i).GetComponent<Transform>().localScale.z);
 
             //update bar color
-            GameObject.Find("SoundSystem").transform.GetChild(i).GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, Mathf.Clamp(yValue, 0.1f, 1.0f));
+            transform.GetChild(i).GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, Mathf.Clamp(yValue, 0.1f, 1.0f));
 
             
         }
@@ -294,6 +349,30 @@ public class SoundController : MonoBehaviour
 
     }
 
+    //Rhythm Scorring Rule
+    public void ScoringRule()
+    {
+
+        //call it when any step made
+        stepTime = audioSource.time;
+
+        rhythnScoreCryteria = stepTime - beatTime;
+
+        if (Mathf.Abs(rhythnScoreCryteria) <= 0.25f)
+        {
+            rhythmScore++;
+            rhythmScoreCombo++;
+            if (rhythmScoreCombo % 5 == 0 && rhythmScoreCombo > 0)
+                PlusMessage(rhythmScoreCombo, "RHYTHM");
+        }
+        else
+        {
+            rhythmScore--;
+            rhythmScoreCombo = 0;
+            PlusMessage(rhythmScoreCombo, "MISS RITHM");
+        }
+    }
+
     //This method is used to analyse beats based on BPM
     public void BeatVerificationByMusicInfo(int musicIndex) {
 
@@ -305,7 +384,6 @@ public class SoundController : MonoBehaviour
 
         if (audioSource.time > Musics[musicIndex].iniInterval1 && audioSource.time < Musics[musicIndex].endInterval1)
         {
-            RhythmScorringRule();
             if (((audioSource.time - Musics[musicIndex].iniInterval1) % (60.0f / Musics[musicIndex].bpm1) <= 0.05f))
             {
                 rhythmAnalysis = true;
@@ -315,7 +393,6 @@ public class SoundController : MonoBehaviour
         }
         else if (audioSource.time > Musics[musicIndex].iniInterval2 && audioSource.time < Musics[musicIndex].endInterval2)
         {
-            RhythmScorringRule();
             if (((audioSource.time - Musics[musicIndex].iniInterval2) % (60.0f / Musics[musicIndex].bpm2) <= 0.05f))
             {
                 rhythmAnalysis = true;
@@ -324,7 +401,6 @@ public class SoundController : MonoBehaviour
         }
         else if (audioSource.time > Musics[musicIndex].iniInterval3 && audioSource.time < Musics[musicIndex].endInterval3)
         {
-            RhythmScorringRule();
             if (((audioSource.time - Musics[musicIndex].iniInterval3) % (60.0f / Musics[musicIndex].bpm3) <= 0.05f))
             {
                 rhythmAnalysis = true;
@@ -333,7 +409,6 @@ public class SoundController : MonoBehaviour
         }
         else if (audioSource.time > Musics[musicIndex].iniInterval4 && audioSource.time < Musics[musicIndex].endInterval4)
         {
-            RhythmScorringRule();
             if (((audioSource.time - Musics[musicIndex].iniInterval4) % (60.0f / Musics[musicIndex].bpm3) <= 0.05f))
             {
                 rhythmAnalysis = true;
@@ -342,7 +417,6 @@ public class SoundController : MonoBehaviour
         }
         else if (audioSource.time > Musics[musicIndex].iniInterval5 && audioSource.time < Musics[musicIndex].endInterval5)
         {
-            RhythmScorringRule();
             if (((audioSource.time - Musics[musicIndex].iniInterval5) % (60.0f / Musics[musicIndex].bpm3) <= 0.05f))
             {
                 rhythmAnalysis = true;
@@ -351,7 +425,6 @@ public class SoundController : MonoBehaviour
         }
         else if (audioSource.time > Musics[musicIndex].iniInterval6 && audioSource.time < Musics[musicIndex].endInterval6)
         {
-            RhythmScorringRule();
             if (((audioSource.time - Musics[musicIndex].iniInterval6) % (60.0f / Musics[musicIndex].bpm3) <= 0.05f))
             {
                 rhythmAnalysis = true;
@@ -360,7 +433,6 @@ public class SoundController : MonoBehaviour
         }
         else if (audioSource.time > Musics[musicIndex].iniInterval7 && audioSource.time < Musics[musicIndex].endInterval7)
         {
-            RhythmScorringRule();
             if (((audioSource.time - Musics[musicIndex].iniInterval7) % (60.0f / Musics[musicIndex].bpm3) <= 0.05f))
             {
                 rhythmAnalysis = true;
@@ -371,114 +443,54 @@ public class SoundController : MonoBehaviour
             rhythmAnalysis = false;
         }
 
-        
-    }
-
-    public void RhythmScorringRule() {
-        //ACTUAL Rhythm scoring rule
-
-        if (Input.GetKeyDown(KeyCode.W)
-                || Input.GetKeyDown(KeyCode.A)
-                || Input.GetKeyDown(KeyCode.S)
-                || Input.GetKeyDown(KeyCode.D)
-                || (Input.GetAxis("LeftAnalogX") > 0.0F && stepXDone == false)
-                || (Input.GetAxis("LeftAnalogX") < 0.0F && stepXDone == false)
-                || (Input.GetAxis("LeftAnalogY") > 0.0F && stepYDone == false)
-                || (Input.GetAxis("LeftAnalogY") < 0.0F && stepYDone == false)
-                || (Input.GetAxis("DPADX") > 0.0F && stepXDone == false)
-                || (Input.GetAxis("DPADX") < 0.0F && stepXDone == false)
-                || (Input.GetAxis("DPADY") > 0.0F && stepYDone == false)
-                || (Input.GetAxis("DPADY") < 0.0F && stepYDone == false))
-        {
-            stepTime = audioSource.time;
-            stepXDone = true;
-            stepYDone = true;
-
-            rhythnScoreCryteria = stepTime - beatTime;
-
-            if (Mathf.Abs(rhythnScoreCryteria) <= 0.2f)
-            {
-                rhythmScore++;
-                rhythmScoreCombo++;
-                if (rhythmScoreCombo % 5 == 0)
-                    PlusMessage(rhythmScoreCombo, "RHYTHM");
-            }
-            else
-            {
-                rhythmScore--;
-                rhythmScoreCombo = 0;
-                PlusMessage(rhythmScoreCombo, "MISS RITHM");
-            }
-        }
-
-        //Reset step condition for X Axys
-        if (Input.GetAxis("DPADX") == 0.0f && Input.GetAxis("LeftAnalogX") == 0.0f)
-            stepXDone = false;
-
-        //Reset step condition for Y Axys
-        if (Input.GetAxis("DPADY") == 0.0f && Input.GetAxis("LeftAnalogY") == 0.0f)
-            stepYDone = false;
-
-        //END of Actual Rhythm scoring rule
     }
 
     //This method is used to compare audio clip melody behavior with player arms behavior
     public void MelodyVerification() {
 
+        //Melody value is defined on a specific iterval of audio spectrum
+        float melodyValue01 = Mathf.InverseLerp(0.0f, melodyValueMax, melodyValue);
+        dancerMelodyValue = -Controller.leftArmRotation + Controller.rightArmRotation;
+        melodyAnalisysDelay += Time.deltaTime;
 
-        if (audioSource.time > 0.0f && audioSource.time < 6000.0f)
+        if (melodyAnalisysDelay > 0.2f)
         {
-            musicalPhraseStatus = MusicalPhraseStatus.withinPhrase;
+            MusicStatus.Add(melodyValue01);
+            DancerStatus.Add(dancerMelodyValue);
+            melodyAnalisysDelay = 0.0f;
         }
-        else
+
+        if (MusicStatus.Count > 5)
         {
-            musicalPhraseStatus = MusicalPhraseStatus.withoutPhrase;
-        }
 
-        if (musicalPhraseStatus == MusicalPhraseStatus.withinPhrase)
-        {
-            //Debug.LogError("tá rolando");
+            int melodyPoint = 0;
 
-            //Melody value is defined on a specific iterval of audio spectrum
-            melodyValue01 = Mathf.InverseLerp(0.0f, melodyValueMax, melodyValue);
-            dancerMelodyValue = -Controller.leftArmRotation + Controller.rightArmRotation;
-            melodyAnalisysDelay += Time.deltaTime;
+            for (int i = 1; i < MusicStatus.Count; i++)
+            {
 
-            if (melodyAnalisysDelay > 0.2f) {
-                MusicStatus.Add(melodyValue01);
-                DancerStatus.Add(dancerMelodyValue);
-                melodyAnalisysDelay = 0.0f;
+                if (MusicStatus[i] - MusicStatus[i - 1] > 0.0f
+                    && DancerStatus[i] - DancerStatus[i - 1] > 0.0f)
+                    melodyPoint++;
+
+                else if (MusicStatus[i] - MusicStatus[i - 1] < 0.0f
+                    && DancerStatus[i] - DancerStatus[i - 1] < 0.0f)
+                    melodyPoint++;
+
+                //else if (MusicStatus[i] - MusicStatus[i - 1] == 0.0f
+                //    && DancerStatus[i] - DancerStatus[i - 1] == 0.0f)
+                //    melodyPoint++;
             }
 
-            if (MusicStatus.Count > 4) {
-
-                int melodyPoint = 0;
-
-                for (int i = 1; i < MusicStatus.Count; i++) {
-
-                    if (MusicStatus[i] - MusicStatus[i - 1] > 0.0f
-                        && DancerStatus[i] - DancerStatus[i - 1] > 0.0f)
-                        melodyPoint++;
-
-                    else if (MusicStatus[i] - MusicStatus[i - 1] < 0.0f
-                        && DancerStatus[i] - DancerStatus[i - 1] < 0.0f)
-                        melodyPoint++;
-
-                    else if (MusicStatus[i] - MusicStatus[i - 1] == 0.0f
-                        && DancerStatus[i] - DancerStatus[i - 1] == 0.0f)
-                        melodyPoint++;
-                }
-
-                if (melodyPoint > 1) {
-                    melodyScore+= melodyPoint;
-                    PlusMessage(melodyPoint, "MELODY");
-                }
-                    
-
-                MusicStatus.Clear();
-                DancerStatus.Clear();
-                melodyValueMax = melodyValueMax / 2;
+            if (melodyPoint > 1)
+            {
+                melodyScore += melodyPoint;
+                PlusMessage(melodyPoint, "MELODY");
             }
+
+
+            MusicStatus.Clear();
+            DancerStatus.Clear();
+            melodyValueMax = melodyValueMax / 2;
         }
     }
 
@@ -498,14 +510,13 @@ public class SoundController : MonoBehaviour
         else {
             foreach (GameObject obj in GameObject.FindGameObjectsWithTag("bar"))
             {
-                Destroy(obj);
+                Object.Destroy(obj);
             }
         }
     }
 
     //Set zero for a few variables that have to be zero when stop music
     public void SetVariablesToZero() {
-        timeCount = 0.0f;
         melodyScore = 0;
         rhythmScore = 0;
         beatTime = 0.0f;
@@ -513,13 +524,14 @@ public class SoundController : MonoBehaviour
         onBeat2 = false;
         rhythmAnalysis = false;
         rhythnScoreCryteria = 0.0f;
-        CreateAudioSpectrum(false);
         rhythmScoreCombo = 0;
     }
 
-    public void PlusMessage(int amount, string scoreType) {
+    //Method to sendo combo visual feedbacks
+    public void PlusMessage(int amount, string scoreType)
+    {
         ScoreUpdate.scoreAmount = amount;
         ScoreUpdate.scoreUpdate = scoreType;
-        Instantiate(plusMessage, GameObject.Find("Canvas").transform.position, Quaternion.identity, GameObject.Find("Canvas").transform);
+        Instantiate(plusMessage, GameObject.Find("Canvas").transform.position + new Vector3(0, Screen.height / 5, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
     }
 }

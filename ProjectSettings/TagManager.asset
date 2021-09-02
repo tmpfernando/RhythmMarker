@@ -8,6 +8,8 @@ TagManager:
   - bar
   - scoreUpdate
   - menu
+  - audioVisualizerCanvas
+  - scoreResult
   layers:
   - Default
   - TransparentFX

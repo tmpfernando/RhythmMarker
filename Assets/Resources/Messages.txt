@@ -1,0 +1,9 @@
+ID~Message~Received~From
+0~RED~Hello! Finally you wake up... I thought you where dead! Come closer maybe you can move your LEGS today.
+1~RED~You can use WASD keys to WALK each hit will correspond to one STEP.
+2~BLUE~I know that! It is really exhaustive but you can use DPAD or LEFT ANALOG… if you have a JOYPAD.
+3~GREEN~NICE!!! Great work! Before conquering the universe you will have to learn WALK.
+4~GREEN~About MUSICS, you will score positive if you make the steps on correct RHYTHM TIME, otherwise you will loose points.
+5~BLUE~The GRID below you BLINKS in time with the song... You can correct the FLASH TIME on MENU, if DELAY button where active.
+6~RED~Hey!!! The DELAY button hasn't been activated yet, I'll ask the developer to program it as soon as possible.
+7~GREEN~And... There was something about the melody, but I can not remember now...
