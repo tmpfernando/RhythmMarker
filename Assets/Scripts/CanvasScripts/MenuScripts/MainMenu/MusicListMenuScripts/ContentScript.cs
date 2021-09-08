@@ -33,12 +33,14 @@ public class ContentScript : MonoBehaviour
 
             Debug.Log("added to music list menu: " + buttonMusicLink.name);
         }
+
+        ScreenResolutionCheck.screenResolutionChange.AddListener(ScreenSizeAdjustments);
+        ScreenSizeAdjustments();
     }
 
-    // Update is called once per frame
-    void Update()
+    void ScreenSizeAdjustments()
     {
-
+        //Make size and position adjusts if any screen resolution was detected
         positionY = SoundController.Musics.Count * Screen.height / 20;
 
         GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, (SoundController.Musics.Count + 2) * Screen.height / 10);
@@ -49,5 +51,12 @@ public class ContentScript : MonoBehaviour
             transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition = new Vector2(0, positionY);
             transform.GetChild(i).GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, SoundController.Musics.Count * Screen.height / 10);
         }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        
     }
 }

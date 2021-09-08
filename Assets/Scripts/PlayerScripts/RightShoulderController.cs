@@ -9,12 +9,9 @@ public class RightShoulderController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    void Update() {
 
         if (z > Controller.rightArmRotation)
             z = z - 0.1f * Mathf.Abs(z - Controller.rightArmRotation);
@@ -23,6 +20,5 @@ public class RightShoulderController : MonoBehaviour
             z = z + 0.1f * Mathf.Abs(z - Controller.rightArmRotation);
 
         transform.eulerAngles = new Vector3(0.0f, 0.0f, z);
-
     }
 }

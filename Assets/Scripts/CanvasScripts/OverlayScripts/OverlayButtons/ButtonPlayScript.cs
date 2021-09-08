@@ -11,13 +11,22 @@ public class ButtonPlayScript : MonoBehaviour
         SoundController.musicIsPlaying.AddListener(MusicIsPlaying);
         SoundController.musicIsNotPlaying.AddListener(MusicIsNotPlaying);
         transform.GetComponent<Button>().Select();
+
+        ScreenResolutionCheck.screenResolutionChange.AddListener(ScreenSizeAdjustments);
+        ScreenSizeAdjustments();
+    }
+
+    void ScreenSizeAdjustments()
+    {
+        //Make size and position adjusts if any screen resolution was detected
+        GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / 2, Screen.height / 10);
+        GetComponent<RectTransform>().position = new Vector2(Screen.width / 2, Screen.height / 10);
     }
 
     // Update is called once per frame
     void Update()
     {
-        GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / 2, Screen.height / 10);
-        GetComponent<RectTransform>().position = new Vector2(Screen.width / 2, Screen.height / 10);
+        
     }
 
     public void OnClick()

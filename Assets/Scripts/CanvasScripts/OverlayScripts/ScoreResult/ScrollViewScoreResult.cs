@@ -8,12 +8,13 @@ public class ScrollViewScoreResult : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        ScreenResolutionCheck.screenResolutionChange.AddListener(ScreenSizeAdjustments);
+        ScreenSizeAdjustments();
     }
 
-    // Update is called once per frame
-    void Update()
+    void ScreenSizeAdjustments()
     {
+        //Make size and position adjusts if any screen resolution was detected
         GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / 1.2f, Screen.height / 1.6f);
     }
 }

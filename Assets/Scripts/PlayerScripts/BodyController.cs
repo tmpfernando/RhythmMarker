@@ -7,13 +7,10 @@ public class BodyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
-    // Update is called once per frame
     void Update()
     {
-
         slidestepajust(Controller.supportLeftLeg);
 
         Controller.stepVelocity = 30.0f * Vector3.Distance(Controller.bodyPos, transform.position);

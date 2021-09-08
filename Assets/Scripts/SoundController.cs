@@ -7,6 +7,8 @@ using UnityEngine.Events;
 
 public class SoundController : MonoBehaviour
 {
+    public static float audioDelay;
+
     public static AudioSource audioSource;
 
     public static UnityEvent musicIsPlaying;
@@ -59,10 +61,13 @@ public class SoundController : MonoBehaviour
 
     }
 
-    // Start is called before the first frame update
+    //Start is called before the first frame update
     void Start()
     {
-        
+
+        audioDelay = PlayerPrefs.GetFloat("averageDelay");
+        Debug.Log(audioDelay);
+
         Musics = new List<MusicInfo>();
         LoadMusicInfo();
 
@@ -81,7 +86,7 @@ public class SoundController : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         audioSource.playOnAwake = false;
         audioSource.loop = false;
-        audioSource.volume = 0.5f;
+        audioSource.volume = 0.75f;
 
         musicIndex = 0;
         audioSource.clip = Musics[musicIndex].musicArchive;
@@ -92,7 +97,7 @@ public class SoundController : MonoBehaviour
     }
 
 
-    // Update is called once per frame
+    //Update is called once per frame
     void Update()
     {
 
@@ -121,7 +126,6 @@ public class SoundController : MonoBehaviour
 
         if (audioSource.isPlaying)
         {
-            Debug.Log("PLAY Music");
             audioSource.Stop();
             musicIsNotPlaying?.Invoke();
             SetVariablesToZero();
@@ -129,7 +133,6 @@ public class SoundController : MonoBehaviour
         }
         else
         {
-            Debug.Log("STOP Music");
             //CreateAudioSpectrum(true);
             audioSource.Play();
             musicIsPlaying?.Invoke();
@@ -289,8 +292,6 @@ public class SoundController : MonoBehaviour
                 }
             }
         }
-
-
     }
 
     //Change the heights of audio spectrum bars
@@ -352,24 +353,26 @@ public class SoundController : MonoBehaviour
     //Rhythm Scorring Rule
     public void ScoringRule()
     {
-
         //call it when any step made
-        stepTime = audioSource.time;
-
-        rhythnScoreCryteria = stepTime - beatTime;
-
-        if (Mathf.Abs(rhythnScoreCryteria) <= 0.25f)
+        if (rhythmAnalysis)
         {
-            rhythmScore++;
-            rhythmScoreCombo++;
-            if (rhythmScoreCombo % 5 == 0 && rhythmScoreCombo > 0)
-                PlusMessage(rhythmScoreCombo, "RHYTHM");
-        }
-        else
-        {
-            rhythmScore--;
-            rhythmScoreCombo = 0;
-            PlusMessage(rhythmScoreCombo, "MISS RITHM");
+            stepTime = audioSource.time;
+
+            rhythnScoreCryteria = - audioDelay + stepTime - beatTime;
+
+            if (Mathf.Abs(rhythnScoreCryteria) <= 0.15f)
+            {
+                rhythmScore++;
+                rhythmScoreCombo++;
+                if (rhythmScoreCombo % 5 == 0 && rhythmScoreCombo > 0)
+                    PlusMessage(rhythmScoreCombo, "RHYTHM");
+            }
+            else
+            {
+                rhythmScore--;
+                rhythmScoreCombo = 0;
+                PlusMessage(rhythmScoreCombo, "MISS RITHM");
+            }
         }
     }
 

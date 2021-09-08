@@ -7,12 +7,11 @@ public class LeftLegController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
-    // Update is called once per frame
     void Update()
     {
+
         Controller.stepVelocity = 30.0f * Vector3.Distance(Controller.leftLegPos, transform.position);
 
         if (transform.position.y > Controller.leftLegPos.y)

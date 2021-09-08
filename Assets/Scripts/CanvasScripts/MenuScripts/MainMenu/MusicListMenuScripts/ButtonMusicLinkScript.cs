@@ -13,12 +13,21 @@ public class ButtonMusicLinkScript : MonoBehaviour
     void Start()
     {
         transform.GetChild(0).GetComponent<Text>().text = musicName + " by " + artistName + "(Open Link)";
+
+        ScreenResolutionCheck.screenResolutionChange.AddListener(ScreenSizeAdjustments);
+        ScreenSizeAdjustments();
+    }
+
+    void ScreenSizeAdjustments()
+    {
+        //Make size and position adjusts if any screen resolution was detected
+        GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / 1.5f, Screen.height / 10);
     }
 
     // Update is called once per frame
     void Update()
     {
-        GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / 1.5f, Screen.height / 10);
+        
     }
 
     public void OnCLick() {

@@ -18,7 +18,15 @@ public class MenuScript : MonoBehaviour
     {
         audioVisualizer = Resources.Load<GameObject>("Prefabs/Overlay/AudioVisualizer");
         Instantiate(audioVisualizer, transform.position, Quaternion.identity, transform);
-    } 
+
+        ScreenResolutionCheck.screenResolutionChange.AddListener(ScreenSizeAdjustments);
+        ScreenSizeAdjustments();
+    }
+
+    void ScreenSizeAdjustments()
+    {
+        //Make size and position adjusts if any screen resolution was detected
+    }
 
     // Update is called once per frame
     void Update()

@@ -1,4 +1,3 @@
-[System.Serializable]
 public class SaveStateScript
 {
 
@@ -16,6 +15,11 @@ public class SaveStateScript
     public Score[] scoreHistory;
     #endregion
 
+    public string fileForGameConfiguration;
+    public string fileForUnlockedMusics;
+    public string fileForPlaylist;
+    public string fileForReceivedMessages;
+    public string fileForScoreHistory;
 
     public SaveStateScript(
 
@@ -41,6 +45,6 @@ public class SaveStateScript
         this.playlist = playlist;
         this.receivedMessages = receivedMessages;
         this.scoreHistory = scoreHistory;
-
     }
 }
+

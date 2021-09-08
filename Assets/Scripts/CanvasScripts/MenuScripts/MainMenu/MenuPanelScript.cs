@@ -9,11 +9,20 @@ public class MenuPanelScript : MonoBehaviour
     void Start()
     {
         transform.GetChild(0).GetComponent<Button>().Select();
+
+        ScreenResolutionCheck.screenResolutionChange.AddListener(ScreenSizeAdjustments);
+        ScreenSizeAdjustments();
+    }
+
+    void ScreenSizeAdjustments()
+    {
+        //Make size and position adjusts if any screen resolution was detected
+        GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
     }
 
     // Update is called once per frame
     void Update()
     {
-        GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
+        
     }
 }

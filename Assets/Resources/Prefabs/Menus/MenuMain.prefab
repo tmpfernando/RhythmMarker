@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 928690611487062091}
   - component: {fileID: 3409547598223191942}
   m_Layer: 5
-  m_Name: InteractionsButtonMenu
+  m_Name: ScoreHistory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5800967ed003db047877dd0d627585e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionsMenu: {fileID: 2306897112025195658, guid: 96d6a37147262f043b74075c935dc310, type: 3}
+  interactionsMenu: {fileID: 1267027480720176116, guid: c0428d842069bf14dbb2007ac14f8be3, type: 3}
 --- !u!1 &940732890390822591
 GameObject:
   m_ObjectHideFlags: 0
@@ -411,14 +411,14 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 4488998135735235545}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3253360299298012253}
-        m_TargetAssemblyTypeName: CloseMenuButton, Assembly-CSharp
-        m_MethodName: 
+      - m_Target: {fileID: 1240524802539243281}
+        m_TargetAssemblyTypeName: ButtonDelaysScript, Assembly-CSharp
+        m_MethodName: OnClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -440,6 +440,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81b24202bf572e84992b4250c5b55f68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  delayMenu: {fileID: 6257152372061159809, guid: c5416d41a49f5c7429ce24f68ff978e9, type: 3}
 --- !u!1 &5399237564743329667
 GameObject:
   m_ObjectHideFlags: 0
@@ -518,7 +519,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: INTERACTIONS
+  m_Text: SCORE HISTORY
 --- !u!1 &5811423251622171131
 GameObject:
   m_ObjectHideFlags: 0

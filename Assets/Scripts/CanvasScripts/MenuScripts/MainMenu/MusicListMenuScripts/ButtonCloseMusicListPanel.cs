@@ -13,13 +13,22 @@ public class ButtonCloseMusicListPanel : MonoBehaviour
         menuPanel = Resources.Load<GameObject>("Prefabs/Menus/MenuMain");
         InputSetup.menuButton.AddListener(OnClick);
         GetComponent<Button>().Select();
+
+        ScreenResolutionCheck.screenResolutionChange.AddListener(ScreenSizeAdjustments);
+        ScreenSizeAdjustments();
+    }
+
+    void ScreenSizeAdjustments()
+    {
+        //Make size and position adjusts if any screen resolution was detected
+        GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / 6, Screen.height / 10);
+        GetComponent<RectTransform>().position = new Vector2(Screen.width / 6, (Screen.height / 10));
     }
 
     // Update is called once per frame
     void Update()
     {
-        GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / 6, Screen.height / 10);
-        GetComponent<RectTransform>().position = new Vector2(Screen.width / 6, (Screen.height / 10));
+        
     }
 
     public void OnClick()

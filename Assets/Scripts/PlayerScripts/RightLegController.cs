@@ -7,12 +7,11 @@ public class RightLegController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
-    // Update is called once per frame
-    void Update()
+    void Update() 
     {
+
         Controller.stepVelocity = 30.0f * Vector3.Distance(Controller.rightLegPos, transform.position);
 
         if (transform.position.y > Controller.rightLegPos.y)
@@ -24,4 +23,5 @@ public class RightLegController : MonoBehaviour
         if (transform.position.x < Controller.rightLegPos.x)
             transform.Translate(Vector3.right * Time.deltaTime * Controller.stepVelocity, Space.World);
     }
+
 }

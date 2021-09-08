@@ -5,27 +5,38 @@ using UnityEngine.UI;
 
 public class ButtonCloseInteractionsMenu : MonoBehaviour
 {
-    public GameObject menuPanel;
+    public GameObject blackSurfaceOverlay;
 
     // Start is called before the first frame update
     void Start()
     {
 
-        menuPanel = Resources.Load<GameObject>("Prefabs/Menus/MenuMain");
+        blackSurfaceOverlay = Resources.Load<GameObject>("Prefabs/Overlay/BlackSurfaceOverlay");
         InputSetup.menuButton.AddListener(OnClick);
         GetComponent<Button>().Select();
+
+        ScreenResolutionCheck.screenResolutionChange.AddListener(ScreenSizeAdjustments);
+        ScreenSizeAdjustments();
+
+    }
+
+    void ScreenSizeAdjustments()
+    {
+        //Make size and position adjusts if any screen resolution was detected
+
+        GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / 6, Screen.height / 10);
+        GetComponent<RectTransform>().position = new Vector2(Screen.width / 6, (Screen.height / 10));
     }
 
     // Update is called once per frame
     void Update()
     {
-        GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / 6, Screen.height / 10);
-        GetComponent<RectTransform>().position = new Vector2(Screen.width / 6, (Screen.height / 10));
+        
     }
 
     public void OnClick()
     {
-        Instantiate(menuPanel, GameObject.Find("Canvas").transform.position, Quaternion.identity, GameObject.Find("Canvas").transform);
+        Instantiate(blackSurfaceOverlay, GameObject.Find("Canvas").transform.position, Quaternion.identity, GameObject.Find("Canvas").transform);
         Object.Destroy(transform.parent.gameObject);
     }
 }

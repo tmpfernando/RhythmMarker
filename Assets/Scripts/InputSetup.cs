@@ -339,18 +339,19 @@ public class InputSetup : MonoBehaviour
             leftArmPosition0?.Invoke();
             rightArmPosition2?.Invoke();
         }
+        else if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow))
+        {
+            //Cross Position
+            leftArmPosition1?.Invoke();
+            rightArmPosition1?.Invoke();
+        }
         else if (Input.GetKey(KeyCode.UpArrow))
         {
             //Ballet Dancer Position
             leftArmPosition2?.Invoke();
             rightArmPosition2?.Invoke();
         }
-        else if (Input.GetKey(KeyCode.DownArrow))
-        {
-            //Cross Position
-            leftArmPosition1?.Invoke();
-            rightArmPosition1?.Invoke();
-        }
+        
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
             //Arm Left

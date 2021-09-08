@@ -7,18 +7,25 @@ public class ButtonNextScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        ScreenResolutionCheck.screenResolutionChange.AddListener(ScreenSizeAdjustments);
+        ScreenSizeAdjustments();
     }
 
     // Update is called once per frame
     void Update()
     {
-        GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / 8, Screen.height / 10);
-        GetComponent<RectTransform>().position = new Vector2(7 * (Screen.width / 8), Screen.height / 10);
+        
     }
 
     public void OnClick()
     {
         InputSetup.nextMusicButton.Invoke();
+    }
+
+    void ScreenSizeAdjustments()
+    {
+        //Make size and position adjusts if any screen resolution was detected
+        GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / 8, Screen.height / 10);
+        GetComponent<RectTransform>().position = new Vector2(7 * (Screen.width / 8), Screen.height / 10);
     }
 }
