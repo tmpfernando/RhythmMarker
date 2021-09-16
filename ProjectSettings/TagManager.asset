@@ -7,9 +7,15 @@ TagManager:
   - grade
   - bar
   - scoreUpdate
-  - menu
   - audioVisualizerCanvas
   - scoreResult
+  - mainMenu
+  - audioDelayMenu
+  - delaysMenu
+  - interactionsMenu
+  - musicListMenu
+  - videoDelayMenu
+  - playerBody
   layers:
   - Default
   - TransparentFX

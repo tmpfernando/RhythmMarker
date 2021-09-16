@@ -78,10 +78,10 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Music: 80s Pop Synthwave by 80s Pop Synthwave
+  m_Text: 'Music: Micha-Juni 2019-2 by Micha-Juni 2019-2
 
-    Rhythm Score: -126,
-    Melody Score: 58'
+    Rhythm Score: 57, Melody
+    Score: 233'
 --- !u!1 &9058801689582398971
 GameObject:
   m_ObjectHideFlags: 0

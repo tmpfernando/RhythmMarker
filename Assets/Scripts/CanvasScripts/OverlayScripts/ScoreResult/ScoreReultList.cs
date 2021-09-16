@@ -26,18 +26,22 @@ public class ScoreReultList : MonoBehaviour
             //check if string is not empty
             if (PlayerPrefs.GetString("music" + i) != "")
             {
-                countScoresToShow++;
-
                 //set the text that will be spawned on each score item
                 scoreResultText = "Music: " + PlayerPrefs.GetString("music" + i) + "\nRhythm Score: " + PlayerPrefs.GetInt("rhythmScore" + i) + ", Melody Score: " + PlayerPrefs.GetInt("melodyScore" + i);
 
-                //instantiate each score iten
-                Instantiate(score, new Vector2(0, scorePositonY), Quaternion.identity, GetComponent<RectTransform>());
-                //rename each score iten
-                score.name = "score" + i;
-                //Set the text of each score iten
+                //Set sibling index to ordering score itens
+                score.transform.SetSiblingIndex(countScoresToShow);
+
+                //rename each score item
+                score.name = "score" + countScoresToShow;
+
+                //Set the text of each score item
                 score.transform.GetChild(0).GetComponent<Text>().text = scoreResultText;
 
+                //instantiate each score iten
+                Instantiate(score, new Vector2(0, scorePositonY), Quaternion.identity, GetComponent<RectTransform>());
+
+                countScoresToShow++;
             }
         }
 
@@ -59,11 +63,12 @@ public class ScoreReultList : MonoBehaviour
 
         GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, (countScoresToShow + 2) * (Screen.height / 8));
 
+
         for (int i = 0; i < countScoresToShow; i++)
         {
             transform.GetChild(i).GetComponent<RectTransform>().localPosition = new Vector2(0, scorePositonY);
             transform.GetChild(i).GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width / 1.4f, Screen.height / 8);
-
+            
             scorePositonY -= Screen.height / 8;
         }
     }

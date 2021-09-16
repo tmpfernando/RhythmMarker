@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,9 +53,6 @@
     <UnityVersion>2020.3.16f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Assets\Scripts\CanvasScripts\MenuScripts\MainMenu\ButtonExitScript.cs" />
     <Compile Include="Assets\Scripts\CanvasScripts\OverlayScripts\OverlayButtons\ButtonMenuScript.cs" />
     <Compile Include="Assets\Scripts\CanvasScripts\OverlayScripts\AudioVisualizer\AudioVisualizerCanvasScript.cs" />
@@ -67,17 +64,21 @@
     <Compile Include="Assets\Scripts\SaveState\ScoreHistory.cs" />
     <Compile Include="Assets\Scripts\CanvasScripts\MenuScripts\MainMenu\MusicListMenuScripts\ButtonCloseMusicListPanel.cs" />
     <Compile Include="Assets\Scripts\CanvasScripts\OverlayScripts\ScoreUpdate.cs" />
+    <Compile Include="Assets\Scripts\CanvasScripts\SceneObjectsScripts\SquareGradeScript.cs" />
     <Compile Include="Assets\Scripts\PlayerScripts\RightShoulderController.cs" />
     <Compile Include="Assets\Scripts\InputSetup.cs" />
     <Compile Include="Assets\Scripts\CanvasScripts\OverlayScripts\ScoreResult\Score.cs" />
-    <Compile Include="Assets\Scripts\CanvasScripts\OverlayScripts\ScoreResult\ScoreContent.cs" />
+    <Compile Include="Assets\Scripts\CanvasScripts\MenuScripts\MainMenu\DelaysMenuScripts\VideoDelayMenu\MenuVideoDelay.cs" />
     <Compile Include="Assets\Scripts\PlayerScripts\BodyController.cs" />
     <Compile Include="Assets\Scripts\CanvasScripts\OverlayScripts\OverlayButtons\ButtonNextScript.cs" />
     <Compile Include="Assets\Scripts\CanvasScripts\OverlayScripts\OverlayButtons\ButtonPlayScript.cs" />
     <Compile Include="Assets\Scripts\CanvasScripts\MenuScripts\MainMenu\MusicListMenuScripts\ScrollViewMusicListMenu.cs" />
+    <Compile Include="Assets\Scripts\CanvasScripts\MenuScripts\MainMenu\DelaysMenuScripts\MenuDelays.cs" />
+    <Compile Include="Assets\Scripts\NPCScripts\NPCBodyController.cs" />
     <Compile Include="Assets\Scripts\CanvasScripts\OverlayScripts\OverlayButtons\ButtonInteractionScript.cs" />
     <Compile Include="Assets\Scripts\CanvasScripts\OverlayScripts\tapCircleScript.cs" />
     <Compile Include="Assets\Scripts\CanvasScripts\MenuScripts\MainMenu\DelaysMenuScripts\SliderAudioDelay.cs" />
+    <Compile Include="Assets\Scripts\CanvasScripts\MenuScripts\MainMenu\MusicListMenuScripts\MenuMusicList.cs" />
     <Compile Include="Assets\Scripts\CanvasScripts\MenuScripts\MainMenu\ButtonCloseMenuScript.cs" />
     <Compile Include="Assets\Scripts\CanvasScripts\OverlayScripts\ScoreResult\ButtonCloseScoreResult.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />
@@ -112,6 +113,8 @@
     <Compile Include="Assets\Scripts\CanvasScripts\MenuScripts\MainMenu\InteractionsMenuScripts\ContentInteractionsMenu.cs" />
     <Compile Include="Assets\Scripts\CanvasScripts\MenuScripts\MainMenu\DelaysMenuScripts\AudioDelayMenu\TextAudioDelayMenu.cs" />
     <Compile Include="Assets\Scripts\SaveState\SaveTXTFiles.cs" />
+    <Compile Include="Assets\Scripts\DialoguesScripts\Dialogue1.cs" />
+    <Compile Include="Assets\Scripts\LayerOrganizer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Messages.txt" />

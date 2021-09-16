@@ -5,16 +5,16 @@ using UnityEngine.UI;
 
 public class ButtonMenuScript : MonoBehaviour
 {
+    public GameObject blackSurfaceOverlay;
     public GameObject menuPanel;
-    public Button firstSelected;
 
     // Start is called before the first frame update
     void Start()
     {
         
         InputSetup.menuButton.AddListener(OnClick);
+        blackSurfaceOverlay = Resources.Load<GameObject>("Prefabs/Overlay/BlackSurfaceOverlay");
         menuPanel = Resources.Load<GameObject>("Prefabs/Menus/MenuMain");
-        firstSelected = menuPanel.transform.GetChild(0).GetComponent<Button>();
 
         ScreenResolutionCheck.screenResolutionChange.AddListener(ScreenSizeAdjustments);
         ScreenSizeAdjustments();
@@ -28,10 +28,14 @@ public class ButtonMenuScript : MonoBehaviour
 
     public void OnClick()
     {
-        if (GameObject.FindGameObjectsWithTag("menu").Length == 0)
+        if (GameObject.FindGameObjectsWithTag("mainMenu").Length > 0)
+        {
+            Instantiate(blackSurfaceOverlay, GameObject.Find("Canvas").transform.position, Quaternion.identity, GameObject.Find("Canvas").transform);
+            Object.Destroy(GameObject.FindGameObjectWithTag("mainMenu").gameObject);
+        }
+        else 
         {
             Instantiate(menuPanel, GameObject.Find("Canvas").transform.position, Quaternion.identity, GameObject.Find("Canvas").transform);
-            firstSelected.Select();
             Object.Destroy(transform.parent.gameObject);
         }
     }

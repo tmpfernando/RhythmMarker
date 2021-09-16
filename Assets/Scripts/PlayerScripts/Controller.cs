@@ -5,6 +5,7 @@ using UnityEngine;
 public class Controller : MonoBehaviour
 {
 
+
     public static Vector3 leftLegPos = new Vector3(-0.1f, -0.2f, 0);
     public static Vector3 rightLegPos = new Vector3(0.1f, -0.2f, 0);
     public static Vector3 bodyPos = new Vector3(0.0f, -0.0f, 0);
@@ -221,13 +222,6 @@ public class Controller : MonoBehaviour
                 if (verify)
                     Instantiate(squareGrade, positions[i], Quaternion.identity, GameObject.Find("Grade").transform);
             }
-
-            foreach (GameObject grade in GameObject.FindGameObjectsWithTag("grade"))
-            {
-                grade.GetComponent<LineRenderer>().startColor = new Color(1, 1, 1, SoundController.gradeTransparency);
-                grade.GetComponent<LineRenderer>().endColor = new Color(1, 1, 1, SoundController.gradeTransparency);
-            }
-
 
         }
         lastPosition = actualPosition;

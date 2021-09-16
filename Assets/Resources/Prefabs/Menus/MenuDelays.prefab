@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 4799140528264172195}
   - component: {fileID: 7315932893551887214}
   m_Layer: 5
-  m_Name: VolumeText
+  m_Name: VideoDelayText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -330,7 +330,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: -0.5 sec <- Video Delay -> +0.5 sec
+  m_Text: 0 sec <- Video Delay -> 1 sec
 --- !u!1 &1539433318535042156
 GameObject:
   m_ObjectHideFlags: 0
@@ -685,13 +685,13 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 8683773475198374702}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ButtonAudioDelayTest, Assembly-CSharp
+      - m_Target: {fileID: 7814322243089476528}
+        m_TargetAssemblyTypeName: ButtonVideoDelayTest, Assembly-CSharp
         m_MethodName: OnClick
         m_Mode: 1
         m_Arguments:
@@ -794,13 +794,13 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 6992735336076606850}
   m_FillRect: {fileID: 772907512637998713}
   m_HandleRect: {fileID: 3346681070033450419}
   m_Direction: 0
-  m_MinValue: -0.5
-  m_MaxValue: 0.5
+  m_MinValue: 0
+  m_MaxValue: 1
   m_WholeNumbers: 0
   m_Value: 0
   m_OnValueChanged:
@@ -1146,9 +1146,10 @@ GameObject:
   - component: {fileID: 5028914971530565269}
   - component: {fileID: 5468369001705988758}
   - component: {fileID: 8102146834879100603}
+  - component: {fileID: 837432599901365936}
   m_Layer: 5
   m_Name: MenuDelays
-  m_TagString: Untagged
+  m_TagString: delaysMenu
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1215,6 +1216,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &837432599901365936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6257152372061159809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9c37ee20ab902449a06e261676d3998, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6326785796462906078
 GameObject:
   m_ObjectHideFlags: 0

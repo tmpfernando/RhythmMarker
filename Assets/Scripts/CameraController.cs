@@ -11,7 +11,7 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         speed = 0.0f;
-        
+
     }
 
     // Update is called once per frame
@@ -19,7 +19,7 @@ public class CameraController : MonoBehaviour
     {
         camTarget = new Vector3(Controller.bodyPos.x, Controller.bodyPos.y, Controller.bodyPos.z);
 
-        speed = 0.8f * Vector3.Distance(Controller.bodyPos, transform.position);
+        speed = 0.6f * Vector3.Distance(Controller.bodyPos, transform.position);
 
         if (transform.position.y > camTarget.y)
             transform.Translate(Vector3.down * Time.deltaTime * speed, Space.World);

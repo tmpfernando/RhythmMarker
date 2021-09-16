@@ -11,7 +11,7 @@ public class ButtonVideoDelayTest : MonoBehaviour
     void Start()
     {
 
-        videoDelayTestMenu = Resources.Load<GameObject>("Prefabs/Menus/MenuAudioDelay");
+        videoDelayTestMenu = Resources.Load<GameObject>("Prefabs/Menus/MenuVideoDelay");
 
         ScreenResolutionCheck.screenResolutionChange.AddListener(ScreenSizeAdjustments);
         ScreenSizeAdjustments();

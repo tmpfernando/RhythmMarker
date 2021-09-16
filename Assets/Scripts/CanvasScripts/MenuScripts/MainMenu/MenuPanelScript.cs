@@ -8,10 +8,16 @@ public class MenuPanelScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        transform.GetChild(0).GetComponent<Button>().Select();
-
-        ScreenResolutionCheck.screenResolutionChange.AddListener(ScreenSizeAdjustments);
-        ScreenSizeAdjustments();
+        if (GameObject.FindGameObjectsWithTag("mainMenu").Length > 1)
+        {
+            Object.Destroy(gameObject);
+        }
+        else
+        {
+            transform.GetChild(0).GetComponent<Button>().Select();
+            ScreenResolutionCheck.screenResolutionChange.AddListener(ScreenSizeAdjustments);
+            ScreenSizeAdjustments();
+        }
     }
 
     void ScreenSizeAdjustments()

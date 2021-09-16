@@ -24,31 +24,37 @@ public class MenuAudioDelay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-        audioSource = GetComponent<AudioSource>();
-        rhythmTrack = Resources.Load<AudioClip>("Musics/RhythmTrack");
-        audioSource.clip = rhythmTrack;
-        audioSource.playOnAwake = false;
-
-        testEnded = false;
-        start = false;
-        bpm = 80;
-        startBeatTime = 0.004f;
-
-        InputSetup.anyStepOn.AddListener(InputForDelayTest);
-
-        musicTime = new float[16];
-        inputTime = new float[16];
-
-        for (int i = 0; i < musicTime.Length; i++) 
+        if (GameObject.FindGameObjectsWithTag("audioDelayMenu").Length > 1)
         {
-            musicTime[i] = i * 0.75f + startBeatTime;
+            Object.Destroy(gameObject);
         }
+        else
+        {
+            audioSource = GetComponent<AudioSource>();
+            rhythmTrack = Resources.Load<AudioClip>("Musics/RhythmTrack");
+            audioSource.clip = rhythmTrack;
+            audioSource.playOnAwake = false;
 
-        transform.GetChild(1).GetComponent<Text>().text = "PRESS ANY STEP BUTTON (OR SWIPE) TO START.\nTHEN, HIT STEP BUTTON (OR SWIPE) WHEN YOU HEAR THE BEAT";
+            testEnded = false;
+            start = false;
+            bpm = 80;
+            startBeatTime = 0.005f;
 
-        timeToStart = 3;
-        timeToEnd = 3;
+            InputSetup.anyStepOn.AddListener(InputForDelayTest);
+
+            musicTime = new float[16];
+            inputTime = new float[16];
+
+            for (int i = 0; i < musicTime.Length; i++)
+            {
+                musicTime[i] = i * 0.75f + startBeatTime;
+            }
+
+            transform.GetChild(1).GetComponent<Text>().text = "PRESS ANY STEP BUTTON (OR SWIPE) TO START.\nTHEN, HIT STEP BUTTON (OR SWIPE) WHEN YOU HEAR THE BEAT\n(HINT: NO NEED TO PRESS THE BUTTON ON ALL BEATS, TRY TO RECOGNIZE RHYTHM BEFORE STARTING PUSHING THE BUTTON)";
+
+            timeToStart = 3;
+            timeToEnd = 3;
+        }
     }
 
     // Update is called once per frame
@@ -83,13 +89,13 @@ public class MenuAudioDelay : MonoBehaviour
                 }
                 else if (audioSource.isPlaying)
                 {
-                    transform.GetChild(1).GetComponent<Text>().text = "HIT STEP BUTTON WHEN YOU HEAR THE BEAT\n" + (audioSource.clip.length - audioSource.time).ToString("0.00");
+                    transform.GetChild(1).GetComponent<Text>().text = "HIT STEP BUTTON WHEN YOU HEAR THE BEAT\nENDING IN " + (audioSource.clip.length - audioSource.time).ToString("0.0") + " SECONDS.";
                 }
             }
             else
             {
                 timeToStart -= Time.deltaTime;
-                transform.GetChild(1).GetComponent<Text>().text = "AUDIO DELAY TEST STARTS IN\n" + timeToStart.ToString("0.00");
+                transform.GetChild(1).GetComponent<Text>().text = "(HINT: NO NEED TO PRESS THE BUTTON ON ALL BEATS, TRY TO RECOGNIZE RHYTHM BEFORE STARTING PUSHING THE BUTTON)\nSTARTS IN\n" + timeToStart.ToString("0.0") + " SECONDS.";
             }
         }
 

@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class ButtonBackMenuAudioDelay : MonoBehaviour
 {
-    public GameObject audioDelayMenu;
+    public GameObject delaysMenu;
 
     // Start is called before the first frame update
     void Start()
     {
-        audioDelayMenu = Resources.Load<GameObject>("Prefabs/Menus/MenuDelays");
+        delaysMenu = Resources.Load<GameObject>("Prefabs/Menus/MenuDelays");
         InputSetup.menuButton.AddListener(OnClick);
         GetComponent<Button>().Select();
 
@@ -33,7 +33,7 @@ public class ButtonBackMenuAudioDelay : MonoBehaviour
 
     public void OnClick()
     {
-        Instantiate(audioDelayMenu, GameObject.Find("Canvas").transform.position, Quaternion.identity, GameObject.Find("Canvas").transform);
+        Instantiate(delaysMenu, GameObject.Find("Canvas").transform.position, Quaternion.identity, GameObject.Find("Canvas").transform);
         Object.Destroy(transform.parent.gameObject);
     }
 }

@@ -8,7 +8,7 @@ public class SliderAudioDelay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GetComponent<Slider>().value = PlayerPrefs.GetFloat("averageDelay");
+        GetComponent<Slider>().value = PlayerPrefs.GetFloat("audioDelay");
         ScreenResolutionCheck.screenResolutionChange.AddListener(ScreenSizeAdjustments);
         ScreenSizeAdjustments();
     }
@@ -29,7 +29,7 @@ public class SliderAudioDelay : MonoBehaviour
     public void ValueChangeCheck()
     {
         SoundController.audioDelay = GetComponent<Slider>().value;
-        PlayerPrefs.SetFloat("averageDelay", GetComponent<Slider>().value);
+        PlayerPrefs.SetFloat("audioDelay", GetComponent<Slider>().value);
         PlayerPrefs.Save();
     }
 }

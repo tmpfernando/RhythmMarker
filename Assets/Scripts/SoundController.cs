@@ -8,11 +8,16 @@ using UnityEngine.Events;
 public class SoundController : MonoBehaviour
 {
     public static float audioDelay;
+    public static float gradeDelay;
 
     public static AudioSource audioSource;
 
     public static UnityEvent musicIsPlaying;
     public static UnityEvent musicIsNotPlaying;
+    public static UnityEvent musicEnded;
+    public static UnityEvent beatEvent;
+    public bool beated;
+    public bool musicEnd;
 
     public static List<MusicInfo> Musics;
     public TextAsset musicInfo;
@@ -30,15 +35,13 @@ public class SoundController : MonoBehaviour
 
     public GameObject plusMessage;
 
-    public static float gradeTransparency = 0.05f;
-
     bool rhythmAnalysis;
     public static int rhythmScore = 0;
     int rhythmScoreCombo = 0;
     float rhythnScoreCryteria = 0.0f;
     float beatTime = 0.0f;
     float stepTime = 0.0f;
-    public bool onBeat2;
+    public static bool onBeat2;
 
     public static int melodyScore = 0;
     public float dancerMelodyValue = 0.0f;
@@ -49,11 +52,12 @@ public class SoundController : MonoBehaviour
     List<float> MusicStatus;
     List<float> DancerStatus;
 
-
     private void Awake()
     {
         musicIsPlaying = new UnityEvent();
         musicIsNotPlaying = new UnityEvent();
+        musicEnded = new UnityEvent();
+        beatEvent = new UnityEvent();
 
         audioSource = GetComponent<AudioSource>();
         plusMessage = Resources.Load<GameObject>("Prefabs/Overlay/ScoreUpdate");
@@ -64,8 +68,12 @@ public class SoundController : MonoBehaviour
     //Start is called before the first frame update
     void Start()
     {
-
-        audioDelay = PlayerPrefs.GetFloat("averageDelay");
+        beated = false;
+        musicEnd = false;
+        
+        audioDelay = PlayerPrefs.GetFloat("audioDelay");
+        gradeDelay = PlayerPrefs.GetFloat("gradeDelay");
+        AudioListener.volume = PlayerPrefs.GetFloat("listenerVolume");
         Debug.Log(audioDelay);
 
         Musics = new List<MusicInfo>();
@@ -86,7 +94,6 @@ public class SoundController : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         audioSource.playOnAwake = false;
         audioSource.loop = false;
-        audioSource.volume = 0.75f;
 
         musicIndex = 0;
         audioSource.clip = Musics[musicIndex].musicArchive;
@@ -104,18 +111,25 @@ public class SoundController : MonoBehaviour
         //Updates while the music is playing
         if (audioSource.isPlaying)
         {
+            if (audioSource.clip.length - audioSource.time < 0.5f) 
+            {
+                musicEnd = true;
+            }
             musicIsPlaying?.Invoke();
-            //UpdateAudioSpectrumBars();
             BeatVerificationByMusicInfo(musicIndex);
             MelodyVerification();
         }
         else {
+            if (musicEnd) 
+            {
+                musicEnd = false;
+                musicEnded?.Invoke();
+                SetVariablesToZero();
+                Debug.Log("Fim da música");
+            }
             musicIsNotPlaying?.Invoke();
-            SetVariablesToZero();
         }
-
-        UpdateGradeColor();
-
+        
     }
 
     #region PLAYLIST_ACTIONS
@@ -270,29 +284,7 @@ public class SoundController : MonoBehaviour
 
     #endregion
 
-    //Change the color of that grade spawned at player position
-    public void UpdateGradeColor() {
-        //updade grade color
 
-        if (onBeat2)
-        {
-            foreach (GameObject grade in GameObject.FindGameObjectsWithTag("grade"))
-            {
-                grade.GetComponent<LineRenderer>().startColor = new Color(1, 1, 1, 0.3f);
-                grade.GetComponent<LineRenderer>().endColor = new Color(1, 1, 1, 0.1f);
-            }
-        }
-        else {
-            foreach (GameObject grade in GameObject.FindGameObjectsWithTag("grade"))
-            {
-                if (grade.GetComponent<LineRenderer>().startColor.a > 0.06f)
-                {
-                    grade.GetComponent<LineRenderer>().startColor = new Color(1, 1, 1, grade.GetComponent<LineRenderer>().startColor.a - 0.01f);
-                    grade.GetComponent<LineRenderer>().endColor = new Color(1, 1, 1, grade.GetComponent<LineRenderer>().startColor.a - 0.01f);
-                }
-            }
-        }
-    }
 
     //Change the heights of audio spectrum bars
     public void UpdateAudioSpectrumBars() {
@@ -376,13 +368,22 @@ public class SoundController : MonoBehaviour
         }
     }
 
+    
+
     //This method is used to analyse beats based on BPM
     public void BeatVerificationByMusicInfo(int musicIndex) {
 
         if (onBeat2)
         {
-            beatTime = audioSource.time;
+            if (!beated) 
+            {
+                StartCoroutine("Beated");
+            }
             onBeat2 = false;
+        }
+        else
+        {
+            beated = false;
         }
 
         if (audioSource.time > Musics[musicIndex].iniInterval1 && audioSource.time < Musics[musicIndex].endInterval1)
@@ -445,7 +446,15 @@ public class SoundController : MonoBehaviour
         else {
             rhythmAnalysis = false;
         }
+    }
 
+    //Calls the beat Event
+    private IEnumerator Beated()
+    {
+        beatEvent?.Invoke();
+        beatTime = audioSource.time;
+        beated = true;
+        yield return new WaitForSeconds(0.1f);
     }
 
     //This method is used to compare audio clip melody behavior with player arms behavior
@@ -537,4 +546,5 @@ public class SoundController : MonoBehaviour
         ScoreUpdate.scoreUpdate = scoreType;
         Instantiate(plusMessage, GameObject.Find("Canvas").transform.position + new Vector3(0, Screen.height / 5, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
     }
+
 }

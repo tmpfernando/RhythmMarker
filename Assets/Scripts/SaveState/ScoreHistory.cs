@@ -7,53 +7,21 @@ public class ScoreHistory : MonoBehaviour
 {
     public static int historySize;
 
-    AudioSource audioSource;
-
     public static bool showScoreResult;
-    bool musicIsEnding;
-    UnityEvent musicEnd;
-
 
     GameObject scoreResultPanel;
-
-    private void Awake()
-    {
-        musicEnd = new UnityEvent();
-    }
 
     // Start is called before the first frame update
     void Start()
     {
         scoreResultPanel = Resources.Load<GameObject>("Prefabs/Overlay/ScoreResult");
-
+        
         historySize = 10;
-        musicIsEnding = false;
         showScoreResult = false;
 
-        audioSource = GetComponent<AudioSource>();
-        musicEnd.AddListener(ScoreResults);
+        SoundController.musicEnded.AddListener(ScoreResults);
 
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (audioSource.isPlaying)
-        {
-            if (audioSource.clip.length - audioSource.time < 1 && !musicIsEnding)
-            {
-                musicIsEnding = true;
-            }
-        }
-        else {
-            if (musicIsEnding) 
-            {
-                musicIsEnding = false;
-                musicEnd?.Invoke();
-            }
-        }
-    }
-
 
     void ScoreSave() 
     {

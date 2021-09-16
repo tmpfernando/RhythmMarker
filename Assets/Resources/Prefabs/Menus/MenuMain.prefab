@@ -146,7 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5800967ed003db047877dd0d627585e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionsMenu: {fileID: 1267027480720176116, guid: c0428d842069bf14dbb2007ac14f8be3, type: 3}
+  ScoreResultsOverlay: {fileID: 0}
 --- !u!1 &940732890390822591
 GameObject:
   m_ObjectHideFlags: 0
@@ -1157,7 +1157,7 @@ GameObject:
   - component: {fileID: 5744743366584553147}
   m_Layer: 5
   m_Name: MenuMain
-  m_TagString: menu
+  m_TagString: mainMenu
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

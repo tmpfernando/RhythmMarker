@@ -11,6 +11,7 @@ public class SliderVideoDelay : MonoBehaviour
         //GetComponent<Slider>().value = AudioListener.volume;
         ScreenResolutionCheck.screenResolutionChange.AddListener(ScreenSizeAdjustments);
         ScreenSizeAdjustments();
+        GetComponent<Slider>().value = PlayerPrefs.GetFloat("gradeDelay");
     }
 
     void ScreenSizeAdjustments()
@@ -28,6 +29,8 @@ public class SliderVideoDelay : MonoBehaviour
 
     public void ValueChangeCheck()
     {
-        //AudioListener.volume = Mathf.Clamp(GetComponent<Slider>().value, 0.01f, 0.99f);
+        SoundController.gradeDelay = GetComponent<Slider>().value;
+        PlayerPrefs.SetFloat("gradeDelay", GetComponent<Slider>().value);
+        PlayerPrefs.Save();
     }
 }
